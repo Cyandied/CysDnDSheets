@@ -1,0 +1,7 @@
+venv
+node_modules
+README.md
+__pycache__
+backend/__pycache__
+PCs/*
+itemsSpellsFeatures/*
