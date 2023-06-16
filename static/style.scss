@@ -161,6 +161,12 @@ a {
     color: $accent;
 }
 
+hr {
+    width: 100%;
+    color: $accent;
+    border-style: solid;
+}
+
 .flash {
     opacity: 1;
     transform: translate(0, 0);
@@ -178,6 +184,7 @@ a {
     top: 10vh;
     left: 0;
     right: 0;
+    z-index: 300;
 }
 
 .end-flash {
@@ -210,3 +217,47 @@ input>button {
         border-color: $darkest;
     }
 }
+
+form{
+    position: relative;
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+.tab-button {
+    background-color: $darkest;
+    padding: 10px;
+    border-radius: 10px;
+    color: $white;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $black;
+    }
+    &:active{
+        background-color: $accent;
+    }
+}
+
+.square {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.add-new {
+    color: $accent;
+    &:hover{
+        color: $white;
+    }
+    &:active{
+        color: $accent2;
+    }
+}
+
+button {
+    cursor: pointer;
+}
+

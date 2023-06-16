@@ -137,6 +137,12 @@ a {
   color: #d38dff;
 }
 
+hr {
+  width: 100%;
+  color: #d38dff;
+  border-style: solid;
+}
+
 .flash {
   opacity: 1;
   transform: translate(0, 0);
@@ -154,6 +160,7 @@ a {
   top: 10vh;
   left: 0;
   right: 0;
+  z-index: 300;
 }
 
 .end-flash {
@@ -188,6 +195,48 @@ button:disabled,
 input > button:disabled {
   background-color: #535462;
   border-color: #403e49;
+}
+
+form {
+  position: relative;
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+
+.tab-button {
+  background-color: #403e49;
+  padding: 10px;
+  border-radius: 10px;
+  color: #e3f3ff;
+}
+.tab-button:hover {
+  cursor: pointer;
+  background-color: #161119;
+}
+.tab-button:active {
+  background-color: #d38dff;
+}
+
+.square {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.add-new {
+  color: #d38dff;
+}
+.add-new:hover {
+  color: #e3f3ff;
+}
+.add-new:active {
+  color: #8dffff;
+}
+
+button {
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=style.css.map */

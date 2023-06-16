@@ -1,8 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 <form method="post">
-<button name="button" value="home">home</button>
-<button name="button" value="edit-mode">edit sheet</button>
+    <button name="button" value="home">home</button>
+    {% if user.id == pc.userID %}
+    <button name="button" value="edit-mode">edit sheet</button>
+    {% if pc.linkedGame %}
+    Linked to game: {{pc.linkedGame}} <button value="unlink-game" name="button">unlink game</button>
+    {% else %}
+    <input type="text" name="link-game" placeholder="paste game id">
+    <button value="link-game" name="button">link game</button>
+    {% endif %}
+    {% endif %}
+
+    <div class="tab-buttons">
+        <input type="text" name="last-tab" value="{{last_tab}}" class="last-tab hidden">
+        <div class="tab-button" data-tab="overview">overview</div>
+        <div class="tab-button" data-tab="inventory">inventory</div>
+        <div class="tab-button" data-tab="spells">spells</div>
+        <div class="tab-button" data-tab="biography">biography</div>
+    </div>
+    <div class="tab-content">
+        {% for tab in ["overview","inventory","spells","biography"] %}
+        <div class="tab hidden" data-tab="{{tab}}">
+            {% set path = ["parts/",tab,".html"] %}
+            {% include path|join("") %}
+        </div>
+        {% endfor %}
+    </div>
 </form>
 <script defer src="/js/sheet.js"></script>
 {% endblock %}

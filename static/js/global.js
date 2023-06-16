@@ -11,11 +11,10 @@ if(flash){
     flash.addEventListener("click", e=>{
         hideFlash()
     })
-    
-    
+
     setTimeout(()=>{
         hideFlash()
-    },10000)
+    },5000)
 }
 
 const clickToDisplay = document.querySelectorAll(".click-to-display")
