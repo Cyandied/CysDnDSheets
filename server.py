@@ -93,8 +93,8 @@ def home():
         for jsonNam in listdir(f'PCs/{session["user"]["id"]}'):
             with open(f'PCs/{session["user"]["id"]}/{jsonNam}', 'r') as f:
                 pc = Char(existingChr=json.loads(f.read()))
-        if pc.userID == session["user"]["id"]:
-            PCs.append([f'{pc.userID}~{jsonNam.split(".")[0]}',"own"])
+            if pc.userID == session["user"]["id"]:
+                PCs.append([f'{pc.userID}~{jsonNam.split(".")[0]}',"own"])
     if session["user"]["id"] in listdir("PCs") and session["user"]["role"] in ["dm","admin"]:
         for userfolder in listdir("PCs"):
             for jsonNam in listdir(f'PCs/{userfolder}'):

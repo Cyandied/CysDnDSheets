@@ -81,7 +81,7 @@
         <div class="tab-button" data-tab="spells">spells</div>
         <div class="tab-button" data-tab="biography">biography</div>
     </div>
-    <div class="tab-content flex-row center">
+    <div class="tab-content">
         {% for tab in ["overview","inventory","spells","biography"] %}
         <div class="tab hidden" data-tab="{{tab}}">
             {% set path = ["parts/",tab,".html"] %}

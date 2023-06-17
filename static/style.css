@@ -2,6 +2,10 @@
   font-family: "Gill Sans MT", "Calibri", "Trebuchet MS", sans-serif;
 }
 
+h1, h2, h3, h4, h5 {
+  margin: 8px 0;
+}
+
 body {
   margin: 0;
   position: relative;
@@ -237,6 +241,40 @@ form {
 
 button {
   cursor: pointer;
+}
+
+.feature {
+  background-color: #e3f3ff;
+  padding: 2px;
+  border-radius: 8px;
+  color: #161119;
+}
+.feature > .title {
+  background-color: #d38dff;
+  padding: 2px;
+  border-radius: 5px;
+}
+.feature.big {
+  width: 100%;
+}
+.feature.big > .title {
+  cursor: pointer;
+}
+.feature.big > .title:hover {
+  color: #8dffff;
+}
+
+.features-wrap {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 20vb;
+}
+
+.part.container {
+  width: 100%;
+}
+.part.overview {
+  width: 30%;
 }
 
 /*# sourceMappingURL=style.css.map */

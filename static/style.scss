@@ -10,6 +10,10 @@ $accent2: #8dffff;
     font-family: 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
 }
 
+h1, h2, h3, h4, h5 {
+    margin: 8px 0;
+}
+
 body {
     margin: 0;
     position: relative;
@@ -261,3 +265,38 @@ button {
     cursor: pointer;
 }
 
+.feature{
+    background-color: $white;
+    padding: 2px;
+    border-radius: 8px;
+    color: $black;
+    >.title {
+        background-color: $accent;
+        padding: 2px;
+        border-radius: 5px;
+    }
+
+    &.big {
+        width: 100%;        
+        > .title{
+        &:hover {
+            color: $accent2;
+        }
+        cursor: pointer;
+    }}
+}
+
+.features-wrap{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 20vb;
+}
+
+.part {
+    &.container {
+        width: 100%;
+    }
+    &.overview {
+        width: 30%;
+    }
+}

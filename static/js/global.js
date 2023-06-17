@@ -1,50 +1,60 @@
 const flash = document.querySelector(".flash")
 
-function hideFlash(){
+function hideFlash() {
     flash.classList.add("end-flash")
-    setTimeout(()=>{
+    setTimeout(() => {
         flash.classList.add("hidden")
-    },200)
+    }, 200)
 }
 
-if(flash){
-    flash.addEventListener("click", e=>{
+if (flash) {
+    flash.addEventListener("click", e => {
         hideFlash()
     })
 
-    setTimeout(()=>{
+    setTimeout(() => {
         hideFlash()
-    },5000)
+    }, 5000)
 }
 
 const clickToDisplay = document.querySelectorAll(".click-to-display")
 const displays = document.querySelectorAll(".display")
 
-function hideDisplay(display){
-    display.classList.add("hide")
-    setTimeout(()=>{
+function hideDisplay(display, id) {
+    if (id == "burg") {
+        display.classList.add("hide")
+        setTimeout(() => {
+            display.classList.add("hidden")
+        }, 200)
+    }
+    else {
         display.classList.add("hidden")
-    },200)
+    }
 }
 
-function showDisplay(display){
-    display.classList.remove("hidden")
-    setTimeout(()=>{
-        display.classList.remove("hide")
-    },1)
+function showDisplay(display, id) {
+    if (id == "burg") {
+        display.classList.remove("hidden")
+        setTimeout(() => {
+            display.classList.remove("hide")
+        }, 1)
+    }
+    else {
+        display.classList.remove("hidden")
+    }
 }
 
 
 clickToDisplay.forEach(clickable => {
-    clickable.addEventListener("click", e=>{
+    clickable.addEventListener("click", e => {
         const id = e.target.dataset.id
         displays.forEach(display => {
             const displayId = display.dataset.id
-            if(displayId == id){
-                if(display.classList.contains("hidden")){
-                    showDisplay(display)
+            if (displayId == id) {
+                if (display.classList.contains("hidden")) {
+                    showDisplay(display, id)
                 }
-                else{hideDisplay(display)}
+                else { hideDisplay(display, id) }
             }
         })
     })
@@ -56,13 +66,13 @@ const modalButton = document.querySelectorAll(".modal-button")
 const closeModal = document.querySelectorAll(".close-modal")
 
 modalButton.forEach(elem => {
-    elem.addEventListener("click", e=>{
+    elem.addEventListener("click", e => {
         const modalType = e.target.dataset.modal
         modalBackgrounds.forEach(modal => {
-            if(modal.dataset.id == modalType){
+            if (modal.dataset.id == modalType) {
                 modal.classList.remove("hidden")
             }
-            else{
+            else {
                 modal.classList.add("hidden")
             }
         })
@@ -71,7 +81,7 @@ modalButton.forEach(elem => {
 });
 
 closeModal.forEach(close => {
-    close.addEventListener("click",e=>{
+    close.addEventListener("click", e => {
         modalBackgrounds.forEach(modal => {
             modal.classList.add("hidden")
         })

@@ -1,21 +1,6 @@
 {% if editmode %}
-<div class="flex-row">
-    <div>
-        {% for ability in pc.ability %}
-        <div class="flex-column center">
-            <h3>{{ability}}</h3>
-            <div>
-                <input type="text" class="square" name="{{ability}}.value" value="{{pc.ability[ability].value}}">
-                <span>{% if pc.ability[ability].modifier is ge(0) %}+{% endif %}{{pc.ability[ability].modifier}}</span>
-            </div>
-            <div>
-                <label for="{{ability}}.saveingThrow">save</label>
-                <input type="checkbox" name="{{ability}}.saveingThrow" value="pc.ability[ability].saveingThrow">
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    <div>
+<div class="flex-row center part container">
+    <div class="part overview flex-column wrap flex-top-uneven" style="height: 500px;">
         {% for skill in pc.skills %}
         <h3>{{pc.skills[skill].label}}</h3>
         <div>
@@ -28,30 +13,47 @@
         </div>
         {% endfor %}
     </div>
-    <div>
+    <div class="part overview flex-column wrap flex-top-uneven flex-center" style="height: 400px;">
+        {% for ability in pc.ability %}
+        <div class="flex-column center">
+            <h3>{{ability}}</h3>
+            <div>
+                <input type="text" class="square" name="{{ability}}.value" value="{{pc.ability[ability].value}}">
+                <span>{% if pc.ability[ability].modifier is ge(0) %}+{% endif %}{{pc.ability[ability].modifier}}</span>
+            </div>
+            <div>
+                <label for="{{ability}}.saveingThrow">save</label>
+                <input type="checkbox" name="{{ability}}.saveingThrow" value="true" {% if pc.ability[ability].saveingThrow %}checked{% endif %}>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="part overview">
         {% for category in pc.features %}
         <h3>{{category}} <span class="add-new click-to-display" data-id="new-feature.{{category}}">+</span></h3>
         <div>
             <div class="display hidden flex-column" data-id="new-feature.{{category}}">
-                    <label for="new-feature-title.{{category}}">title</label>
-                    <input type="text" name="new-feature-title.{{category}}">
-                    <label for="new-feature-desc.{{category}}">description</label>
-                    <textarea cols="20" rows="3" name="new-feature-desc.{{category}}"
-                        placeholder="Leave blank if a description is undesired"></textarea>
-                    <button name="button" value="add-new-feature">add</button>
+                <label for="new-feature-title.{{category}}">title</label>
+                <input type="text" name="new-feature-title.{{category}}">
+                <label for="new-feature-desc.{{category}}">description</label>
+                <textarea cols="20" rows="3" name="new-feature-desc.{{category}}"
+                    placeholder="Leave blank if a description is undesired"></textarea>
+                <button name="button" value="add-new-feature">add</button>
             </div>
-            {% for feature in pc.features[category] %}
-            {% if feature.desc != "" %}
-            <div class = "flex-column">
-                <span class="big-feature-title click-to-display" data-id="{{feature.title}}">{{feature.title}}</span>
-                <span class="big-feature-desc display hidden" data-id="{{feature.title}}">{{feature.desc}}</span>
+            <div class="flex-row wrap features-wrap">
+                {% for feature in pc.features[category] %}
+                {% if feature.desc != "" %}
+                <div class="flex-column feature big">
+                    <div class="title click-to-display" data-id="{{feature.title}}">{{feature.title}}</div>
+                    <div class="desc display hidden" data-id="{{feature.title}}">{{feature.desc}}</div>
+                </div>
+                {% else %}
+                <div class="feature small">
+                    <div class="title">{{feature.title}}</div>
+                </div>
+                {% endif %}
+                {% endfor %}
             </div>
-            {% else %}
-            <div>
-                <span class="small-feature-title">{{feature.title}}</span>
-            </div>
-            {% endif %}
-            {% endfor %}
         </div>
         {% endfor %}
     </div>
