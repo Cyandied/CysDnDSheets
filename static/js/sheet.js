@@ -24,3 +24,31 @@ function forceTab(){
 }
 
 window.onload = forceTab()
+
+const search_button = document.querySelectorAll(".search")
+const search_params = document.querySelectorAll(".search-for")
+
+const to_sort = document.querySelectorAll(".sortable")
+
+search_button.forEach(button => {
+    button.addEventListener("click", e=> {
+        for(const param of search_params){
+            if(param.value != ""){
+                to_sort.forEach(sortable => {
+                    let name = sortable.dataset[param.dataset.search]
+                    name = name.toLowerCase()
+                    sortable.classList.add("hidden")
+                    // console.log(name.includes(param.value) + " " + name)
+                    // if(name.includes(param.value)){
+                    //     sortable.classList.remove("hidden")
+                    // }
+                })
+            }
+            else{
+                to_sort.forEach(sortable => {
+                    sortable.classList.remove("hidden")
+                })
+            }
+        }
+    })
+})

@@ -60,7 +60,6 @@ clickToDisplay.forEach(clickable => {
     })
 })
 
-const modals = document.querySelectorAll(".modal")
 const modalBackgrounds = document.querySelectorAll(".modal-bg")
 const modalButton = document.querySelectorAll(".modal-button")
 const closeModal = document.querySelectorAll(".close-modal")

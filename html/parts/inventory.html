@@ -1,1 +1,65 @@
-adawawd
+<div class="flex-row gap" style="width: 100%;">
+    <div style="width: 10%;" class="flex-column flex-top-uneven">
+        <h3>Money</h3>
+        {% for money in pc.inventory.money %}
+        <label for="{{money}}">{{money}}</label>
+        <input type="text" name="{{money}}" value="{{pc.inventory.money[money]}}" class="square" style="margin: 8px 0;">
+        {% endfor %}
+    </div>
+    <div style="width: 89%;">
+        <h3>Inventory</h3>
+        <input type="text" name="add-to-category" value="" class="hidden">
+        {% for category in pc.inventory.equipment %}
+        <h4>{{category}} <button type="button" data-modal="add-item" class="modal-button">+</button></h4>
+        <div>
+            {% for item in pc.inventory.equipment[category] %}
+            <div class="feature big" style="margin: 5px 0px;">
+                <div class="flex-row flex-between">
+                    <div class="click-to-display title" data-id="{{item.name}}.display" style="width: 90%;">
+                        {{item.name}}
+                    </div>
+                    <div>
+                        <label for="{{item.name}}.amount">amount</label>
+                        <input type="text" name="{{item.name}}.amount" class="square small" value="{{item.amount}}">
+                    </div>
+                </div>
+                <div class="display hidden flex-row" data-id="{{item.name}}.display" style="width: 90%;">
+                    <div class="flex-column" style="width: 20%;">
+                        {% for attrib in item %}
+                        {% if attrib not in ["text","name","amount","type"] %}
+                        <span>{{attrib}} : {{item[attrib]}}</span>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="devider"></div>
+                    <div style="width: 79%;">
+                        {{item.text}}
+                    </div>
+                </div>
+                <div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="modal-bg hidden" data-id="add-item">
+    <div class="modal">
+        <h2>Add new item to inventory</h2>
+        <h4>Create new item</h4>
+        <div class="flex-row flex-between wrap">
+            {% for attribute in ["name","detail","weight","value"] %}
+            <input type="text" name="{{attribute}}.new-item" placeholder="{{attribute}}">
+            {% endfor %}
+            <textarea name="text.new-item" cols="30" rows="5" style="width: 100%;border-radius: 10px;"></textarea>
+            <button value = "add-new-item" style="width: 100%;">add costum item</button>
+        </div>
+        <h4>or select from list</h4>
+        <input type="text" class="search-for" data-search = "name" placeholder="name of item"><button type="button" class="search">search</button>
+        <div style="max-height: 30vh;overflow-y: scroll;overflow-x: hidden;">
+            {% include "parts/itemsList.html" %}
+        </div>
+        <button type="button" class="close-modal">X</button>
+    </div>
+</div>

@@ -228,6 +228,12 @@ form {
   text-align: center;
   font-size: 20px;
 }
+.square.small {
+  width: 15px;
+  height: 15px;
+  text-align: center;
+  font-size: 13px;
+}
 
 .add-new {
   color: #d38dff;
@@ -249,7 +255,7 @@ button {
   border-radius: 8px;
   color: #161119;
 }
-.feature > .title {
+.feature .title {
   background-color: #d38dff;
   padding: 2px;
   border-radius: 5px;
@@ -257,10 +263,10 @@ button {
 .feature.big {
   width: 100%;
 }
-.feature.big > .title {
+.feature.big .title {
   cursor: pointer;
 }
-.feature.big > .title:hover {
+.feature.big .title:hover {
   color: #8dffff;
 }
 
@@ -275,6 +281,28 @@ button {
 }
 .part.overview {
   width: 30%;
+}
+
+.devider {
+  width: 1px;
+  margin: 0 15px;
+  background-color: #161119;
+}
+
+.modal-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(83, 84, 98, 0.5803921569);
+}
+.modal-bg .modal {
+  background-color: #403e49;
+  width: 80%;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 10% 0 0 10%;
 }
 
 /*# sourceMappingURL=style.css.map */
