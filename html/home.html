@@ -1,29 +1,56 @@
 {% extends "base.html" %}
 {% block content %}
 <form method="post">
-    <button type="button" id="new-sheet">New sheet</button>
-    <input type="text" id="sheet-name" name="sheet-name" class="hidden" placeholder="enter name">
-    <button type="button" id="back" class="hidden">Back</button>
+    <div style="height: 2vh;"></div>
+    <div class="home-wrap">
+        <div class="make-new-sheet">
+            <button type="button" id="new-sheet">New sheet</button>
+            <input type="text" id="sheet-name" name="sheet-name" class="hidden" placeholder="enter name">
+            <button type="button" id="back" class="hidden">Back</button>
+        </div>
+        <div class="load-old-sheet">
+            <span id="dmOpts" {% if user.role not in ["dm","admin"] %} class="hidden" {% endif %}>
+                Show characters from:
+                <select name="game-selection">
+                    <option value="all" selected>all</option>
+                    <option value="own">own sheets</option>
+                    {% for game in user.games %}
+                    <option value="{{game}}">{{game}}</option>
+                    {% endfor %}
+                </select>
+            </span>
 
-    <span id="dmOpts" {% if user.role not in ["dm","admin"] %} class="hidden" {% endif %}>
-        Show charatcers from:
-        <select name="game-selection">
-            <option value="all" selected>all</option>
-            <option value="own">own sheets</option>
-            {% for game in user.games %}
-            <option value="{{game}}">{{game}}</option>
-            {% endfor %}
-        </select>
-    </span>
+            <select name="sheets">
+                <option value="" disabled selected>select sheet</option>
+                {% for PC in PCs %}
+                <option value="{{PC[0]}}" data-game="{{PC[1]}}">{{PC[0].split("~")[1]}}</option>
+                {% endfor %}
+            </select>
 
-    <button value="load-sheet" name="redirect-to">Load sheet</button>
+            <button value="load-sheet" name="redirect-to">Load sheet</button>
+        </div>
 
-    <select name="sheets">
-        <option value="" disabled selected>select sheet</option>
-        {% for PC in PCs %}
-        <option value="{{PC[0]}}" data-game="{{PC[1]}}">{{PC[0].split("~")[1]}}</option>
-        {% endfor %}
-    </select>
+        {% if user.role in ["dm","admin"] %}
+        <div class="dm-controls">
+            <div>
+                initialize new game:
+                <input type="text" name="game-name" placeholder="game name">
+                <button name="button" value="new-game">submit</button>
+            </div>
+            <div class = "dm-games">
+                {% for game in user.games %}
+                <div>
+                    <button type="button" class="click-to-display" data-id="{{game}}">name: {{game}}</button>
+                    <div class="display hidden game-id" data-id="{{game}}">
+                        <span class="id">{{user.games[game]}}</span>
+                        <button type="button" class="game-id">copy ID</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
 </form>
 <script defer src="/js/home.js"></script>
 {% endblock %}

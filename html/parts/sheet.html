@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <form method="post">
+    <div style="height: 2vh;"></div>
     <button name="button" value="home">home</button>
     {% if user.id == pc.userID %}
     <button name="button" value="edit-mode">edit sheet</button>
@@ -12,7 +13,64 @@
     {% endif %}
     {% endif %}
 
-    <div class="tab-buttons">
+    <div class="top flex-row flex-between wrap" style="width: 95%;margin: 20px auto;">
+        {% for part in pc.base %}
+        {% if part not in ["hp","speed","deathsaves"] %}
+        <div class="flex-row flex-top-uneven flex-between" style="width: 19%;">
+            <label for="{{part}}">{{part}}:</label>
+            <input disabled type="text" name="{{part}}" value="{{pc.base[part]}}">
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="flex-row flex-center">
+        <div class="flex-column flex-between center">
+            <h3>hp</h3>
+            <div><input class="square" type="text" name="hp.value" value="{{pc.base.hp.value}}"> / <input disabled class="square"
+                    type="text" name="hp.max" value="{{pc.base.hp.max}}"></div>
+        </div>
+        <div class="flex-column flex-between center">
+            <h3>deathsaves</h3>
+            <div class="flex-row flex-between gap">
+                <div class="flex-column gap">
+                    <label for="deathsaves.failures">failures</label>
+                    <input class="square" type="text" name="deathsaves.failures"
+                        value="{{pc.base.deathsaves.failures}}">
+                </div>
+                <div class="flex-column gap">
+                    <label for="deathsaves.successes">successes</label>
+                    <input class="square" type="text" name="deathsaves.successes"
+                        value="{{pc.base.deathsaves.successes}}">
+                </div>
+            </div>
+        </div>
+        <div class="flex-column flex-between center">
+            <h3>speed</h3>
+            <div class="flex-row flex-between gap">
+                {% for terrain in pc.base.speed %}
+                <div class="flex-column gap">
+                    <label for="speed.{{terrain}}">{{terrain}}</label>
+                    <input disabled class="square" type="text" name="speed.{{terrain}}"
+                        value="{{pc.base.speed[terrain]}}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="flex-column flex-between center">
+            <h3>temporary hp</h3>
+            <div><input class="square" type="text" name="hp.temporary" value="{{pc.base.hp.temporary}}"></div>
+        </div>
+        <div class="flex-column flex-between center">
+            <h3>hitdie sides</h3>
+            <div><input disabled class="square" type="text" name="hp.hitdie" value="{{pc.base.hp.hitdie}}"></div>
+        </div>
+    </div>
+
+    <hr>
+
+
+
+    <div class="tab-buttons flex-row flex-center">
         <input type="text" name="last-tab" value="{{last_tab}}" class="last-tab hidden">
         <div class="tab-button" data-tab="overview">overview</div>
         <div class="tab-button" data-tab="inventory">inventory</div>
@@ -27,6 +85,7 @@
         </div>
         {% endfor %}
     </div>
+<div style="height: 3vh;"></div>
 </form>
 <script defer src="/js/sheet.js"></script>
 {% endblock %}

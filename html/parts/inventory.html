@@ -8,16 +8,17 @@
     </div>
     <div style="width: 89%;">
         <h3>Inventory</h3>
-        <input type="text" name="add-to-category" value="" class="hidden">
-        {% for category in pc.inventory.equipment %}
-        <h4>{{category}} <button type="button" data-modal="add-item" class="modal-button">+</button></h4>
+        <input type="text" name="add-to-category-item" value="" class="hidden add-to-category-item">
+        {% for category in pc.inventory.bag %}
+        <h4>{{category}} <button type="button" data-modal="add-item" data-category = "{{category}}" class="modal-button">+</button></h4>
         <div>
-            {% for item in pc.inventory.equipment[category] %}
+            {% for item in pc.inventory.bag[category] %}
             <div class="feature big" style="margin: 5px 0px;">
                 <div class="flex-row flex-between">
                     <div class="click-to-display title" data-id="{{item.name}}.display" style="width: 90%;">
                         {{item.name}}
                     </div>
+                    <button name="button" value="{{category}}.{{loop.index}}.delete-item">&#10006;</button>
                     <div>
                         <label for="{{item.name}}.amount">amount</label>
                         <input type="text" name="{{item.name}}.amount" class="square small" value="{{item.amount}}">
@@ -52,8 +53,8 @@
             {% for attribute in ["name","detail","weight","value"] %}
             <input type="text" name="{{attribute}}.new-item" placeholder="{{attribute}}">
             {% endfor %}
-            <textarea name="text.new-item" cols="30" rows="5" style="width: 100%;border-radius: 10px;"></textarea>
-            <button value = "add-new-item" style="width: 100%;">add costum item</button>
+            <textarea name="text.new-item" cols="30" rows="5" style="width: 100%;"></textarea>
+            <button  name="button" value = "add-new-item" style="width: 100%;">add costum item</button>
         </div>
         <h4>or select from list</h4>
         <input type="text" class="search-for" data-search = "name" placeholder="name of item"><button type="button" class="search">search</button>

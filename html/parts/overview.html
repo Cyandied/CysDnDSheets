@@ -38,12 +38,64 @@
                 <label for="new-feature-desc.{{category}}">description</label>
                 <textarea cols="20" rows="3" name="new-feature-desc.{{category}}"
                     placeholder="Leave blank if a description is undesired"></textarea>
-                <button name="button" value="add-new-feature">add</button>
+                <button name="button" value="{{category}}.add-new-feature">add</button>
             </div>
             <div class="flex-row wrap features-wrap">
                 {% for feature in pc.features[category] %}
                 {% if feature.desc != "" %}
-                <div class="flex-column feature big">
+                <div class="flex-column flex-between feature big">
+                    <div class="title click-to-display" data-id="{{feature.title}}">{{feature.title}} <button name="button"  value="{{category}}.{{loop.index}}.delete-feature" style="font-size: 10px;">&#10006;</button></div>
+                    <div class="desc display hidden" data-id="{{feature.title}}">{{feature.desc}}</div>
+                </div>
+                {% else %}
+                <div class="feature small">
+                    <div class="title">{{feature.title}} <button name="button"  value="{{category}}.{{loop.index}}.delete-feature" style="font-size: 10px;">&#10006;</button></div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="flex-row center part container">
+    <div class="part overview flex-column wrap flex-top-uneven" style="height: 500px;">
+        {% for skill in pc.skills %}
+        <h3>{{pc.skills[skill].label}}</h3>
+        <div>
+            <select disabled name="{{skill}}.hasSkill">
+                <option value="0" {% if pc.skills[skill].hasSkill==0 %} selected {% endif %}>neutral</option>
+                <option value="1" {% if pc.skills[skill].hasSkill==1 %} selected {% endif %}>profecient</option>
+                <option value="2" {% if pc.skills[skill].hasSkill==2 %} selected {% endif %}>expertise</option>
+            </select>
+            <span>{% if pc.skills[skill].modifier is ge(0) %}+{% endif %}{{pc.skills[skill].modifier}}</span>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="part overview flex-column wrap flex-top-uneven flex-center" style="height: 400px;">
+        {% for ability in pc.ability %}
+        <div class="flex-column center">
+            <h3>{{ability}}</h3>
+            <div>
+                <input disabled type="text" class="square" name="{{ability}}.value" value="{{pc.ability[ability].value}}">
+                <span>{% if pc.ability[ability].modifier is ge(0) %}+{% endif %}{{pc.ability[ability].modifier}}</span>
+            </div>
+            <div>
+                <label for="{{ability}}.saveingThrow">save</label>
+                <input disabled type="checkbox" name="{{ability}}.saveingThrow" value="true" {% if pc.ability[ability].saveingThrow %}checked{% endif %}>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="part overview">
+        {% for category in pc.features %}
+        <h3>{{category}}</h3>
+        <div>
+            <div class="flex-row wrap features-wrap">
+                {% for feature in pc.features[category] %}
+                {% if feature.desc != "" %}
+                <div class="flex-column flex-between feature big">
                     <div class="title click-to-display" data-id="{{feature.title}}">{{feature.title}}</div>
                     <div class="desc display hidden" data-id="{{feature.title}}">{{feature.desc}}</div>
                 </div>
@@ -58,6 +110,4 @@
         {% endfor %}
     </div>
 </div>
-{% else %}
-overview view mode
 {% endif %}

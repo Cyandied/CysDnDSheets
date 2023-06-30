@@ -199,6 +199,16 @@ button:disabled,
 input > button:disabled {
   background-color: #535462;
   border-color: #403e49;
+  color: #e3f3ff;
+}
+
+select {
+  border-radius: 5px;
+}
+select:disabled {
+  background-color: #535462;
+  border-color: #403e49;
+  color: #e3f3ff;
 }
 
 form {
@@ -283,6 +293,15 @@ button {
   width: 30%;
 }
 
+textarea {
+  border-radius: 10px;
+}
+textarea:disabled {
+  background-color: #535462;
+  border-color: #403e49;
+  color: #e3f3ff;
+}
+
 .devider {
   width: 1px;
   margin: 0 15px;
@@ -303,6 +322,75 @@ button {
   padding: 20px;
   border-radius: 10px;
   margin: 10% 0 0 10%;
+}
+
+.signup-wrap {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin: 0 auto;
+}
+.signup-wrap > label {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 20px 0 5px 30px;
+}
+.signup-wrap > button {
+  margin: 20px;
+}
+
+.ToS {
+  background-color: #e3f3ff;
+  color: #161119;
+  text-align: justify;
+  padding: 20px;
+  border-radius: 10px;
+  max-height: 60vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.ToS > span {
+  white-space: pre-wrap;
+}
+.ToS > button {
+  margin: 5px 0;
+  width: 100%;
+  background-color: #8dffff;
+}
+.ToS > button:hover {
+  background-color: #d38dff;
+}
+
+.make-new-sheet {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  gap: 10px;
+}
+
+.load-old-sheet, .home-wrap, .dm-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.dm-games {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 10px;
+  width: 100%;
+}
+.dm-games > div > div {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 10px;
+}
+.dm-games > div > div:last-child {
+  margin-left: 50px;
 }
 
 /*# sourceMappingURL=style.css.map */

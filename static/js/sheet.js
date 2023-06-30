@@ -25,30 +25,17 @@ function forceTab(){
 
 window.onload = forceTab()
 
-const search_button = document.querySelectorAll(".search")
-const search_params = document.querySelectorAll(".search-for")
+const modal_buttons = document.querySelectorAll(".modal-button")
+const hidden_input_item = document.querySelector(".add-to-category-item")
+const hidden_input_spell = document.querySelector(".add-to-category-spell")
 
-const to_sort = document.querySelectorAll(".sortable")
-
-search_button.forEach(button => {
+modal_buttons.forEach(button => {
     button.addEventListener("click", e=> {
-        for(const param of search_params){
-            if(param.value != ""){
-                to_sort.forEach(sortable => {
-                    let name = sortable.dataset[param.dataset.search]
-                    name = name.toLowerCase()
-                    sortable.classList.add("hidden")
-                    // console.log(name.includes(param.value) + " " + name)
-                    // if(name.includes(param.value)){
-                    //     sortable.classList.remove("hidden")
-                    // }
-                })
-            }
-            else{
-                to_sort.forEach(sortable => {
-                    sortable.classList.remove("hidden")
-                })
-            }
+        if(e.target.dataset.modal == "add-item"){
+            hidden_input_item.value = e.target.dataset.category
+        }
+        else if(e.target.dataset.modal == "add-spell"){
+            hidden_input_spell.value = e.target.dataset.category
         }
     })
 })

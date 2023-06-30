@@ -1,0 +1,27 @@
+{% for spell in spells %}
+<div class="feature big sortable" style="margin: 5px 0px;" data-name="{{spell.name}}">
+    <div class="flex-row flex-between">
+        <div class="click-to-display title" data-id="{{spell.name}}.display" style="width: 90%;">
+            {{spell.name}}
+        </div>
+        <div>
+            <button name="button" value="{{loop.index}}.add-exsisting-spell">add this spell</button>
+        </div>
+    </div>
+    <div class="display hidden flex-row" data-id="{{spell.name}}.display" style="width: 90%;">
+        <div class="flex-column" style="width: 20%;">
+            {% for attrib in spell %}
+            {% if attrib not in ["text","name","amount","type"] %}
+            <span>{{attrib}} : {{spell[attrib]}}</span>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="devider"></div>
+        <div style="width: 79%;">
+            {{spell.text}}
+        </div>
+    </div>
+    <div>
+    </div>
+</div>
+{% endfor %}

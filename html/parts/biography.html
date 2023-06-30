@@ -1,5 +1,66 @@
 {% if editmode %}
-biography edit mode
+<div class="flex-row center part container gap">
+    <div class="flex-column gap" style="width: 15%;">
+        <h4>Appearance</h4>
+        {% for attribute in pc.biography.appearance %}
+        <div class="flex-row flex-between">
+            <label for="{{attribute}}">{{attribute}}</label>
+            <input type="text" name="{{attribute}}" value="{{pc.biography.appearance[attribute]}}">
+        </div>
+        {% endfor %}
+    </div>
+    <div class="flex-column gap" style="width: 20%;">
+        <h4>Personality</h4>
+        {% for attribute in pc.biography.personality %}
+        <label for="{{attribute}}">{{attribute}}</label>
+        <textarea name="{{attribute}}" rows="2" style="width: 100%;">{{pc.biography.personality[attribute]}}</textarea>
+        {% endfor %}
+    </div>
+    <div class="flex-column gap" style="width: 20%;">
+        <h4>Connections</h4>
+        {% for attribute in pc.biography.connections %}
+        <label for="{{attribute}}">{{attribute}}</label>
+        <textarea name="{{attribute}}" rows="2" style="width: 100%;">{{pc.biography.connections[attribute]}}</textarea>
+        {% endfor %}
+    </div>
+    <div class="flex-column gap" style="width: 44%;">
+        <h4>Backstory</h4>
+        <textarea name="backstory" rows="10" style="width: 100%;">{{pc.biography.backstory}}</textarea>
+        <h4>Notes</h4>
+        <textarea name="notes" rows="8" style="width: 100%;">{{pc.biography.notes}}</textarea>
+    </div>
+</div>
+
 {% else %}
-biography view mode
+<div class="flex-row center part container gap">
+    <div class="flex-column gap" style="width: 15%;">
+        <h4>Appearance</h4>
+        {% for attribute in pc.biography.appearance %}
+        <div class="flex-row flex-between">
+            <label for="{{attribute}}">{{attribute}}</label>
+            <input disabled type="text" name="{{attribute}}" value="{{pc.biography.appearance[attribute]}}">
+        </div>
+        {% endfor %}
+    </div>
+    <div class="flex-column gap" style="width: 20%;">
+        <h4>Personality</h4>
+        {% for attribute in pc.biography.personality %}
+        <label for="{{attribute}}">{{attribute}}</label>
+        <textarea disabled name="{{attribute}}" rows="2" style="width: 100%;">{{pc.biography.personality[attribute]}}</textarea>
+        {% endfor %}
+    </div>
+    <div class="flex-column gap" style="width: 20%;">
+        <h4>Connections</h4>
+        {% for attribute in pc.biography.connections %}
+        <label for="{{attribute}}">{{attribute}}</label>
+        <textarea disabled name="{{attribute}}" rows="2" style="width: 100%;">{{pc.biography.connections[attribute]}}</textarea>
+        {% endfor %}
+    </div>
+    <div class="flex-column gap" style="width: 44%;">
+        <h4>Backstory</h4>
+        <textarea disabled name="backstory" rows="10" style="width: 100%;">{{pc.biography.backstory}}</textarea>
+        <h4>Notes</h4>
+        <textarea disabled name="notes" rows="8" style="width: 100%;">{{pc.biography.notes}}</textarea>
+    </div>
+</div>
 {% endif %}

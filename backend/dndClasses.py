@@ -9,19 +9,19 @@ class Spell:
         self.time = ""
         self.range = ""
         self.duration = ""
-        self.components =""
-        self.ritual =""
+        self.components = ""
+        self.ritual = ""
         self.school = ""
-        self.text  =""
+        self.text  = ""
 
 
 class Item:
-    def __init__(self):
-        self.name = ""
-        self.detail =""
-        self.weight = ""
-        self.value = ""
-        self.text = ""
+    def __init__(self,name,detail,weight, value, text):
+        self.name = name
+        self.detail =detail
+        self.weight = weight
+        self.value = value
+        self.text = text
 
 
 
@@ -218,7 +218,6 @@ class Char:
                 "description":"",
                 "size":""
             },
-            "portrait":"",
             "backstory":"",
             "notes":"",
             "personality":{
@@ -227,7 +226,7 @@ class Char:
                 "bonds":"",
                 "flaws":""
             },
-            "people":{
+            "connections":{
                 "allies":"",
                 "enemies":"",
                 "organizations":"",
@@ -327,42 +326,23 @@ class Char:
         } if existingChr == None else existingChr["spells"]
 
     def calcMods(self):
-        modifer = {}
         for attrib in self.ability:
             self.ability[attrib]["modifier"] = math.floor((self.ability[attrib]["value"] - 10)/2)
-            if self.ability[attrib]["savingThrow"]:
+            if self.ability[attrib]["saveingThrow"]:
                 self.ability[attrib]["modifier"] += math.ceil(1 + 1/4 * self.base["level"])
         for skill in self.skills:
             self.skills[skill]["modifier"] = self.skills[skill]["hasSkill"] * math.ceil(1 + 1/4 * self.base["level"]) + math.floor((self.ability[self.skills[skill]["from"]]["value"])/2)
         
     
-    def addItem(self, item:Item, destination:str):
-        item = item.__dict__
-        item["notes"] = {}
-        item["notes"]["charges"] = 0
-        item["notes"]["amount"] = 0
-        item["notes"]["notes"] = 0
+    def addItem(self, item:dict, destination:str):
+        item["amount"] = 1
         self.inventory["bag"][destination].append(item)
     
-    def addSpell(self, spell:Spell, slot:str):
-        spell = spell.__dict__
-        self.spells["slots"][slot].append(spell)
+    def addSpell(self, spell:dict, slot:str):
+        self.spells["slots"][slot]["spells"].append(spell)
 
     def addfeature(self, feature:dict, destination:str):
         self.features[destination].append(feature)
-
-    def removeItem(self, item:Item, destination:str):
-        item = item.__dict__
-        for exsistingitem in self.inventory["bag"][destination]:
-            if exsistingitem["name"] == item["name"]:
-                self.inventory["bag"][destination].pop(exsistingitem)
-
-    def removeSpell(self, spell:Spell, slot:str):
-        spell = spell.__dict__
-        self.spells["slots"][slot].pop(spell)
-
-    def removeFeature(self, feature:dict, destination:str):
-        self.features[destination].pop(feature)
     
 
 
