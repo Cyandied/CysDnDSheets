@@ -188,7 +188,7 @@ def home():
                 pc = Char(existingChr=json.loads(f.read()))
             if pc.userID == session["user"]["id"]:
                 PCs.append([f'{pc.userID}~{jsonNam.split(".")[0]}', "own"])
-    if session["user"]["id"] in listdir("PCs") and session["user"]["role"] in [
+    if session["user"]["role"] in [
         "dm",
         "admin",
     ]:
