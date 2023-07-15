@@ -27,6 +27,7 @@ app = Flask(
 )
 
 app.secret_key = "i/2r:='d8$V{[:gHm5x?#YBB-D-6)N"
+adminPass = "7ABC44E3647B1ACE58E5065FD0E8D82BF353418556AF1A80F983D44808640E8F"
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -308,6 +309,55 @@ def sheet_edit(jsonNam):
         editmode=True,
     )
 
+@app.route(f"/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+
+    if request.method == "POST":
+        form = request.form
+        if "button" in form:
+            if form["button"] == "del-sheets":
+                if "to-delete" in form:
+                    for destination in form.getlist("to-delete"):
+                        if "admin-override" in form:
+                            if form["admin-override"] == adminPass:
+                                remove(join("PCs", destination))
+                            else:
+                                flash("Admin password incorrect or not typed in, please try again")
+            if form["button"] == "change-user-light":
+                role = session["user"]["role"]
+                name = session["user"]["name"]
+                message = []
+                if form["role"] in ["dm","player"] and form["role"] != session["user"]["role"]:
+                    role = form["role"]
+                else:
+                    message.append(f'Sorry, {form["role"]} is NOT a valid role, please choose either "player" or "dm"')
+                
+                if form["name"] != session["user"]["name"]:
+                    users = client.collection("users").get_full_list()
+                    names = []
+                    for user in users:
+                        names.append(user.username)
+                    if form["name"] not in names:
+                        name = form["name"]
+                    else:
+                        message.append(f'Sorry, {form["name"]} is already taken, try something else')
+
+                record = client.collection("users").update(session["user"]["id"], query_params={
+                    "username":name,
+                    "role":role
+                })
+
+    profileDirs = listdir("PCs")
+    sheets = {}
+    for profileDir in profileDirs:
+        user = client.collection("users").get_one(profileDir)
+        sheets[profileDir] = {
+            "name":user.username,
+            "sheets":listdir(join("PCs",profileDir))
+        }
+
+    return render_template("profile.html", user = session["user"], sheets = sheets)
 
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
@@ -317,7 +367,6 @@ def logout():
     session["user"] = None
     session["hw"] = None
     return redirect(url_for("login"))
-
 
 if __name__ == "__main__":
     app.run("127.0.0.1", 5001, debug=True)

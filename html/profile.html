@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post">
+    <h4>User data:</h4>
+    {% for attribute in user %}
+    {% if attribute not in ["id","secret","packs","games","email"] %}
+    <label for="{{attribute}}">{{attribute}}</label>
+    <input type="text" value="{{user[attribute]}}" name="{{attribute}}">
+    <br>
+    {% endif %}
+    {% endfor %}
+    <button name="button" value="change-user-light">Commit to changes</button>
+    {% if user.role == "admin" %}
+    <br>
+    <button type="button" class="click-to-display" data-id="admin-options">Show admin options</button>
+    <div class="display hidden" data-id="admin-options">
+        <h4>Permanantly delete sheets:</h4>
+        {% for id in sheets %}
+        {% set user = sheets[id] %}
+        <button type="button" class="click-to-display" data-id="{{user.name}}">{{user.name}}</button>
+        <div class="display hidden" data-id="{{user.name}}">
+            {% for sheet in user.sheets %}
+            <label for="to-delete">{{sheet}}</label>
+            <input type="checkbox" name="to-delete" value="{{id}}/{{sheet}}">
+            <br>
+            {% endfor %}
+        </div>
+        <br>
+        {% endfor %}
+        <input type="password" name="admin-override" placeholder="Enter admin password"><button value="del-sheets"
+            name="button">Delete sheets</button>
+    </div>
+    {% endif %}
+</form>
+{% endblock %}
