@@ -3,6 +3,9 @@ from os.path import join
 from backend.dndClasses import *
 import json
 from flask import flash
+from pocketbase import PocketBase
+
+client = PocketBase("http://127.0.0.1:8090")
 
 def makeNumber(to_try):
     try:
@@ -12,22 +15,31 @@ def makeNumber(to_try):
         flash("It seems one or more things that were supposed to be a number, was not, the offending inputs will be set to 0")
     return value
 
-def viewSheet(form, pc, spells, items, jsonnam, folder):
-
+def viewSheet(form, sheet_id:str, pc:Char):
     if "button" in form:
         if form["button"] == "link-game":
             if form["link-game"]:
+                client.collection("sheets").update(sheet_id, {
+                    "game_id":form["link-game"],
+                    "sheet_json":pc.__dict__
+                })
                 pc.linkedGame = form["link-game"]
                 flash("game linked, your DM now has acess to this sheet")
-            else: flash("Please be sure to paste a valid game id!")
-        if form["button"] == "unlink-game":
+            else:
+                flash("please enter a valid game id, ask your dm for it!")
+        elif form["button"] == "unlink-game":
+            client.collection("sheets").update(sheet_id, {
+                "game_id":"",
+                "sheet_json":pc.__dict__
+            })
             pc.linkedGame = ""
             flash("game unlinked, your DM no longer has acess to this sheet")
+        else:
+            client.collection("sheets").update(sheet_id, {
+                "sheet_json":pc.__dict__
+            })
 
-    with open(f'{folder}/{jsonnam}.json', "w") as f:
-        f.write(json.dumps(pc.__dict__))
-
-def editSheet(form, pc:Char, spells, items, jsonnam, folder):
+def editSheet(form, pc:Char, spells, items, sheet_id):
 
     #base____________________________________________________________________________________________________________
     for part in pc.base:
@@ -128,21 +140,6 @@ def editSheet(form, pc:Char, spells, items, jsonnam, folder):
             pc.linkedGame = ""
             flash("game unlinked, your DM no longer has acess to this sheet")
 
-    with open(f'{folder}/{jsonnam}.json', "w") as f:
-        f.write(json.dumps(pc.__dict__))
-
-
-
-def makeNewJson(jsonNam, id,folder):
-    PCs = [] 
-    user_folders = listdir("PCs")
-    if id not in user_folders:
-        mkdir(join("PCs",id))
-    for pc in listdir(folder):
-        PCs.append(pc.split(".")[0])
-    if jsonNam not in PCs:
-        pc = Char().__dict__
-        pc["userID"] = id
-        with open(f'{folder}/{jsonNam}.json', "x") as f:
-            f.write(json.dumps(pc))
-    return
+    client.collection("sheets").update(sheet_id, {
+        "sheet_json":pc.__dict__
+    })

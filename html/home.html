@@ -23,7 +23,7 @@
             <select name="sheets">
                 <option value="" disabled selected>select sheet</option>
                 {% for PC in PCs %}
-                <option value="{{PC[0]}}" data-game="{{PC[1]}}">{{PC[0].split("~")[1]}}</option>
+                <option value="{{PC[0].split("~")[0]}}" data-game="{{PC[1]}}">{{PC[0].split("~")[1]}}</option>
                 {% endfor %}
             </select>
 

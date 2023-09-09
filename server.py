@@ -183,43 +183,34 @@ def signup():
 def home():
     session["last-tab"] = "overview"
     PCs = []
-    if session["user"]["id"] in listdir("PCs"):
-        for jsonNam in listdir(f'PCs/{session["user"]["id"]}'):
-            with open(f'PCs/{session["user"]["id"]}/{jsonNam}', "r") as f:
-                pc = Char(existingChr=json.loads(f.read()))
-            if pc.userID == session["user"]["id"]:
-                PCs.append([f'{pc.userID}~{jsonNam.split(".")[0]}', "own"])
-    if session["user"]["role"] in [
-        "dm",
-        "admin",
-    ]:
-        for userfolder in listdir("PCs"):
-            for jsonNam in listdir(f"PCs/{userfolder}"):
-                with open(f"PCs/{userfolder}/{jsonNam}", "r") as f:
-                    pc = Char(existingChr=json.loads(f.read()))
-                if pc.linkedGame in session["user"]["games"].values():
-                    index = list(session["user"]["games"].values()).index(pc.linkedGame)
-                    PCs.append(
-                        [
-                            f'{pc.userID}~{jsonNam.split(".")[0]}',
-                            list(session["user"]["games"])[index],
-                        ]
-                    )
+    all_PCs = client.collection("sheets").get_full_list()
+    if len(all_PCs) > 0:
+        for char in all_PCs:
+            if char.user_id == session["user"]["id"]:
+                PCs.append([f'{char.id}~{char.sheet_name}', "own"])
+            elif session["user"]["role"] in ["dm","admin"] and char.game_id in session["user"]["games"].values():
+                index = list(session["user"]["games"].values()).index(char.game_id)
+                PCs.append([f'{char.id}~{char.sheet_name}', list(session["user"]["games"])[index]])
 
     if request.method == "POST":
         if request.form["sheet-name"]:
-            session["relavant_userfolder"] = session["user"]["id"]
-            return redirect(
-                url_for(f"sheet", jsonNam=request.form["sheet-name"].replace(" ", "-"))
-            )
+            empty_pc = Char()
+            record = client.collection("sheets").create({
+                "sheet_name":request.form["sheet-name"],
+                "user_id":session["user"]["id"],
+                "sheet_json":empty_pc.__dict__,
+                "game_id": ""
+            })
+            return redirect(url_for(f"sheet", sheet_id=record.id))
+
         elif "redirect-to" in request.form:
             if request.form["redirect-to"] == "load-sheet":
                 if "sheets" in request.form:
-                    user_folder, jsonNam = request.form["sheets"].split("~")
-                    session["relavant_userfolder"] = user_folder
-                    return redirect(url_for(f"sheet", jsonNam=jsonNam))
+                    sheet_id = request.form["sheets"]
+                    return redirect(url_for(f"sheet", sheet_id=sheet_id))
                 else:
-                    flash("Seems you forgot to select a character sheet to laod :(")
+                    flash("Seems you forgot to select a character sheet to load :(")
+
         if "button" in request.form:
             if request.form["button"] == "new-game":
                 if request.form["game-name"]:
@@ -242,13 +233,12 @@ def home():
     return render_template("home.html", user=session["user"], PCs=PCs)
 
 
-@app.route(f"/sheet/<jsonNam>", methods=["GET", "POST"])
+@app.route(f"/sheet/<sheet_id>", methods=["GET", "POST"])
 @login_required
-def sheet(jsonNam):
-    user_folder = join("PCs", session["relavant_userfolder"])
-    makeNewJson(jsonNam, session["user"]["id"], user_folder)
-    with open(f"{user_folder}/{jsonNam}.json", "r") as f:
-        pc = Char(existingChr=json.loads(f.read()))
+def sheet(sheet_id):
+    pc_json = client.collection("sheets").get_one(sheet_id)
+    pc = Char(existingChr=pc_json.sheet_json)
+    
     spellList = "spells.json" if session["user"]["secret"] else "spellsSRD.json"
     itemList = "items.json" if session["user"]["secret"] else "itemsSRD.json"
     with open(f'itemsSpellsFeatures/{spellList}', "r") as f:
@@ -260,11 +250,11 @@ def sheet(jsonNam):
 
     if request.method == "POST":
         session["last-tab"] = form["last-tab"]
-        viewSheet(form, pc, spellsMaster, itemsMaster, jsonNam, user_folder)
+        viewSheet(form, sheet_id, pc)
 
         if "button" in form:
             if form["button"] == "edit-mode":
-                return redirect(url_for(f"sheet_edit", jsonNam=jsonNam))
+                return redirect(url_for(f"sheet_edit", sheet_id=sheet_id))
             if form["button"] == "home":
                 return redirect(url_for("home"))
 
@@ -279,12 +269,12 @@ def sheet(jsonNam):
     )
 
 
-@app.route(f"/sheet/<jsonNam>/edit_mode", methods=["GET", "POST"])
+@app.route(f"/sheet/<sheet_id>/edit_mode", methods=["GET", "POST"])
 @login_required
-def sheet_edit(jsonNam):
-    user_folder = join("PCs", session["user"]["id"])
-    with open(f"{user_folder}/{jsonNam}.json", "r") as f:
-        pc = Char(existingChr=json.loads(f.read()))
+def sheet_edit(sheet_id):
+    pc_json = client.collection("sheets").get_one(sheet_id)
+    pc = Char(existingChr=pc_json.sheet_json)
+
     with open("itemsSpellsFeatures/spells.json", "r") as f:
         spellsMaster = json.loads(f.read())
     with open("itemsSpellsFeatures/items.json", "r") as f:
@@ -294,11 +284,11 @@ def sheet_edit(jsonNam):
 
     if request.method == "POST":
         session["last-tab"] = form["last-tab"]
-        editSheet(form, pc, spellsMaster, itemsMaster, jsonNam, user_folder)
+        editSheet(form, pc, spellsMaster, itemsMaster, sheet_id)
 
         if "button" in form:
             if form["button"] == "back":
-                return redirect(url_for(f"sheet", jsonNam=jsonNam))
+                return redirect(url_for(f"sheet", sheet_id=sheet_id))
 
     return render_template(
         "parts/sheet_edit_mode.html",
@@ -308,56 +298,6 @@ def sheet_edit(jsonNam):
         last_tab=session["last-tab"],
         editmode=True,
     )
-
-@app.route(f"/profile", methods=["GET", "POST"])
-@login_required
-def profile():
-
-    if request.method == "POST":
-        form = request.form
-        if "button" in form:
-            if form["button"] == "del-sheets":
-                if "to-delete" in form:
-                    for destination in form.getlist("to-delete"):
-                        if "admin-override" in form:
-                            if form["admin-override"] == adminPass:
-                                remove(join("PCs", destination))
-                            else:
-                                flash("Admin password incorrect or not typed in, please try again")
-            if form["button"] == "change-user-light":
-                role = session["user"]["role"]
-                name = session["user"]["name"]
-                message = []
-                if form["role"] in ["dm","player"] and form["role"] != session["user"]["role"]:
-                    role = form["role"]
-                else:
-                    message.append(f'Sorry, {form["role"]} is NOT a valid role, please choose either "player" or "dm"')
-                
-                if form["name"] != session["user"]["name"]:
-                    users = client.collection("users").get_full_list()
-                    names = []
-                    for user in users:
-                        names.append(user.username)
-                    if form["name"] not in names:
-                        name = form["name"]
-                    else:
-                        message.append(f'Sorry, {form["name"]} is already taken, try something else')
-
-                record = client.collection("users").update(session["user"]["id"], query_params={
-                    "username":name,
-                    "role":role
-                })
-
-    profileDirs = listdir("PCs")
-    sheets = {}
-    for profileDir in profileDirs:
-        user = client.collection("users").get_one(profileDir)
-        sheets[profileDir] = {
-            "name":user.username,
-            "sheets":listdir(join("PCs",profileDir))
-        }
-
-    return render_template("profile.html", user = session["user"], sheets = sheets)
 
 @app.route("/logout", methods=["GET", "POST"])
 @login_required
